@@ -26,4 +26,9 @@ jobs:
     - name: Deploy to Tomcat
       env:
         TOMCAT_URL: http://${{ secrets.EC2_PUBLIC_IP }}:8080/manager/text
-        TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNA
+        TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }}
+        TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
+      run: |
+        curl -u $TOMCAT_USERNAME:$TOMCAT_PASSWORD \
+        --upload-file build/libs/app.war \
+        $TOMCAT_URL/deploy?path=/app
