@@ -17,19 +17,13 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-        distribution: 'temurin' # Specify the distribution
+        distribution: 'temurin'
 
     - name: Build Project
       run: |
-        ./gradlew build # For Gradle
-        # mvn package   # For Maven
+        ./gradlew build # Ensure gradlew is present in the repository
 
     - name: Deploy to Tomcat
       env:
         TOMCAT_URL: http://${{ secrets.EC2_PUBLIC_IP }}:8080/manager/text
-        TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }}
-        TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
-      run: |
-        curl -u $TOMCAT_USERNAME:$TOMCAT_PASSWORD \
-        --upload-file build/libs/app.war \
-        $TOMCAT_URL/deploy?path=/app
+        TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNA
