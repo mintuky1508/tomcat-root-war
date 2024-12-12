@@ -16,7 +16,8 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v3
       with:
-        java-version: '17' # Use your project's Java version
+        java-version: '17'
+        distribution: 'temurin' # Specify the distribution
 
     - name: Build Project
       run: |
@@ -29,7 +30,6 @@ jobs:
         TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }}
         TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
       run: |
-        # Replace 'app.war' with your actual WAR file name
         curl -u $TOMCAT_USERNAME:$TOMCAT_PASSWORD \
         --upload-file build/libs/app.war \
         $TOMCAT_URL/deploy?path=/app
