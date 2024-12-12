@@ -21,7 +21,8 @@ jobs:
 
     - name: Build Project
       run: |
-        ./gradlew build # Ensure gradlew is present in the repository
+        cd my-app
+        ./gradlew build
 
     - name: Deploy to Tomcat
       env:
@@ -30,5 +31,5 @@ jobs:
         TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
       run: |
         curl -u $TOMCAT_USERNAME:$TOMCAT_PASSWORD \
-        --upload-file build/libs/app.war \
+        --upload-file my-app/build/libs/app.war \
         $TOMCAT_URL/deploy?path=/app
