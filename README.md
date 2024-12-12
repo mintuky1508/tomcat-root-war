@@ -5,7 +5,7 @@
 
 ROOT.war replaces Tomcat's default ROOT application - $TOMCAT_HOME/webapps/ROOT
 
-## Pre-requisites
+## Pre-requisitess
 
 * [sdkman](https://sdkman.io/install)
 
