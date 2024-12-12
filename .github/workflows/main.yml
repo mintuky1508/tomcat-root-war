@@ -1,4 +1,4 @@
-name: Build and Upload Java Artifact
+name: Deploy to Tomcat
 
 on:
   push:
@@ -6,27 +6,30 @@ on:
       - master
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Check out the code
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Step 2: Set up Java environment
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17' # Replace with your required Java version
-          distribution: 'temurin'
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17' # Use your project's Java version
 
-      # Step 3: Build JAR/WAR file
-      - name: Build with Maven
-        run: mvn clean package
+    - name: Build Project
+      run: |
+        ./gradlew build # For Gradle
+        # mvn package   # For Maven
 
-      # Step 4: Upload the artifact
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: java-artifact
-          path: target/*.jar # Replace with target/*.war if building a WAR file
+    - name: Deploy to Tomcat
+      env:
+        TOMCAT_URL: http://${{ secrets.EC2_PUBLIC_IP }}:8080/manager/text
+        TOMCAT_USERNAME: ${{ secrets.TOMCAT_USERNAME }}
+        TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
+      run: |
+        # Replace 'app.war' with your actual WAR file name
+        curl -u $TOMCAT_USERNAME:$TOMCAT_PASSWORD \
+        --upload-file build/libs/app.war \
+        $TOMCAT_URL/deploy?path=/app
